@@ -1,0 +1,48 @@
+<RelativeLayout
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Button" />
+    
+      <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="75dp"
+        android:layout_toRightOf="@+id/button1"
+        android:text="Button1" />
+      
+       <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="Button3" />
+
+    <ListView
+        android:id="@+id/mybook_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="#eee9e9"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:scrollbars="vertical" >
+    </ListView>
+
+   
+    
+</RelativeLayout>
+
+
