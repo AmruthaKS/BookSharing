@@ -1,9 +1,5 @@
 package com.example.booksharing1;
 
-
-
-
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -20,7 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.Toast;
+
 
 
 

@@ -39,8 +39,12 @@ android {
 dependencies {
     compile project(':facebookSDK')
     compile files('libs/core-2.2.jar')
-    compile "com.android.support:support-v4:18.0.+"
+    compile 'com.android.support:support-v4:18.0.+'
     compile 'org.springframework.android:spring-android-core:1.0.1.RELEASE'
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.+'
+    compile files('libs/GoogleAdMobAdsSdk-4.0.4.jar')
+    compile files('libs/admob-sdk-android.jar')
+    compile files('libs/signpost-commonshttp4-1.2.1.1.jar')
+    compile files('libs/signpost-core-1.2.1.2.jar')
 }

@@ -4,12 +4,22 @@ import org.apache.http.client.HttpClient;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Layout;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.LeadingMarginSpan;
+import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +42,8 @@ class BooksResponse {
     }
 
 }
+
+
 
 public class Books extends NavigationDrawer {
     ListView list;
@@ -97,6 +109,9 @@ public class Books extends NavigationDrawer {
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
                     Toast.makeText(Books.this, "You Clicked at " + book.get(position).getName(), Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(Books.this, SingleBook.class);
+                    i.putExtra("bookObj",book.get(position));
+                    startActivity(i);
                 }
 
                 public void onItemClick1(AdapterView<?> arg0, View arg1,

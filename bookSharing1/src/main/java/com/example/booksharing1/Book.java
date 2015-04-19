@@ -1,8 +1,9 @@
 package com.example.booksharing1;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Book {
+public class Book implements Serializable {
 
         private Long nodeId;
 
@@ -34,11 +35,15 @@ public class Book {
             return publisher;
         }
 
-
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
         public Integer getNumberOfPages() {
             return numberOfPages;
         }
-
+    public void setNumberOfPages(Integer numberOfPages) {
+        this.numberOfPages = numberOfPages;
+    }
 
         private String imageUrl;
 
@@ -48,52 +53,72 @@ public class Book {
             return publishedYear;
         }
 
-
+    public void setPublishedYear(int publishedYear) {
+        this.publishedYear = publishedYear;
+    }
 
         public String getImageUrl() {
             return imageUrl;
         }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
 
 
         public Integer getGoodreadsId() {
             return goodreadsId;
         }
-
+    public void setGoodreadsId(Integer goodreadsId) {
+        this.goodreadsId = goodreadsId;
+    }
 
 
         public String getAuthorName() {
             return authorName;
         }
 
-
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
 
         public String getGoodreadsAuthorId() {
             return goodreadsAuthorId;
         }
 
-
+    public void setGoodreadsAuthorId(String goodreadsAuthorId) {
+        this.goodreadsAuthorId = goodreadsAuthorId;
+    }
 
         public Long getNodeId() {
             return nodeId;
         }
-
+    public void setNodeId(Long nodeId) {
+        this.nodeId = nodeId;
+    }
 
 
         public String getId() {
             return id;
         }
-
+    public void setId(String id) {
+        this.id = id;
+    }
 
         public String getName() {
             return name;
         }
-
+    public void setName(String name) {
+        this.name = name;
+    }
 
 
         public String getIsbn() {
             return isbn;
         }
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 
 
 
@@ -101,26 +126,43 @@ public class Book {
             return description;
         }
 
-
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
         public String getIsbn13() {
             return isbn13;
         }
+    public void setIsbn13(String isbn13) {
+        this.isbn13 = isbn13;
+    }
 
         public String getCreatedDate() {
             return createdDate;
         }
-
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
         public String getStatus() { return  status; }
-
+    public void setStatus(String Status) {
+        this.status = Status;
+    }
         public String getLastModifiedDate() { return lastModifiedDate; }
-
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
         public String getBorrowerId() { return borrowerId; }
-
+    public void setBorrowerId(String borrowerId) {
+        this.borrowerId = borrowerId;
+    }
         public String getDueDate() { return  dueDate; }
-
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
         public String getContractPeriodInDays() { return  contractPeriodInDays; }
-
+    public void setContractPeriodInDays(String contractPeriodInDays) {
+        this.contractPeriodInDays = contractPeriodInDays;
+    }
 
 	 	
 }
