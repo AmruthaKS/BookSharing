@@ -1,7 +1,8 @@
-package com.example.booksharing1;
+package com.example.booksharing1.JSON;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Book implements Serializable {
 
@@ -30,6 +31,29 @@ public class Book implements Serializable {
         private String borrowerId;
         private String dueDate;
         private String contractPeriodInDays;
+    private String bookType;  //Owned, borrowed, wishlist
+
+    public Map<String, Object> getAdditionalProperties() {
+        if(additionalProperties == null)
+            additionalProperties = new HashMap<String, Object>();
+        return additionalProperties;
+    }
+
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
+    }
+
+
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+
+    public String getBookType() {
+        return bookType;
+    }
+
+    public void setBookType(String bookType) {
+        this.bookType = bookType;
+    }
 
         public String getPublisher() {
             return publisher;

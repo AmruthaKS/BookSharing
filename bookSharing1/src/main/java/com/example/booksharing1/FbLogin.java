@@ -1,6 +1,6 @@
 package com.example.booksharing1;
+import com.example.booksharing1.JSON.User;
 import com.facebook.Request;
-import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -11,7 +11,6 @@ import java.util.Arrays;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -28,7 +27,14 @@ public class FbLogin extends FragmentActivity {
     protected String fbUserName = null;
     protected String fbUserId = null;
     protected String fbUserEmail = null;
+    private  static int newUser = 0;
 
+    public static int getNewUser() {
+        return newUser;
+    }
+    public static void setNewUser (int i) {
+        newUser = i;
+    }
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,9 +43,11 @@ public class FbLogin extends FragmentActivity {
 		uiHelper.onCreate(savedInstanceState);
 
 		setContentView(R.layout.fblogin);
+
+
 		username = (TextView) findViewById(R.id.username);
 		loginBtn = (LoginButton) findViewById(R.id.fb_login_button);
-		loginBtn.setReadPermissions(Arrays.asList("email"));
+		loginBtn.setReadPermissions(Arrays.asList("email" ));
         final int[] flag = {0};
         final Context context = this;
 		loginBtn.setUserInfoChangedCallback(new UserInfoChangedCallback() {
@@ -74,6 +82,12 @@ public class FbLogin extends FragmentActivity {
 				Exception exception) {
 			if (state.isOpened()) {
 				Log.d("MainActivity", "Facebook session opened.");
+                Request request1 = new Request();
+                String ver = request1.getVersion();
+                System.out.println("version is "+ver);
+
+                Request request = new Request(session, "me/events?fields=cover,name,start_time");
+                request.executeAsync();
 
                 /*
                 Request.newMeRequest(session, new Request.GraphUserCallback()
@@ -135,7 +149,7 @@ public class FbLogin extends FragmentActivity {
         @Override
         protected User doInBackground(Void... fbId) {
 
-            String url = "http://10.74.229.154:8389/neo4j/v1/users/fbId/"+fbUserId;
+            String url = "http://117.96.1.204:8389/neo4j/v1/users/fbId/"+fbUserId;
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
             System.out.println("in doing get for the object...!!!!!!!"+fbUserId);
@@ -161,10 +175,31 @@ public class FbLogin extends FragmentActivity {
             else {
                 UserInfo u1 = UserInfo.getInstance();
                 u1.copy(u);
-                Intent intent = new Intent(context, GoodReadsLogin.class);
-               // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(intent);
+                setNewUser(0);
+                String auth_status = u.getGoodreadsAuthStatus();
+                int gFlag = 1;   // flag to determine whether to show the good reads login page
 
+                if (auth_status == "yes" )
+                {
+                    gFlag = 1;
+                } else if (auth_status == "no")
+                {
+                    gFlag = 0;
+                } else if (auth_status == "done") {
+                    gFlag = 0;
+                }
+                System.out.print("The auth status is ...."+auth_status);
+                if (gFlag == 1)  // show the good reads page
+                {
+                  //  Intent intent = new Intent(context, GoodReadsLogin.class);
+
+                    Intent intent = new Intent(context, FindOwnedBooks.class);
+                    // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(intent);
+                } else {        // show the books app page
+                    Intent intent = new Intent(context, MyBooks.class);
+                    context.startActivity(intent);
+                }
 
             }
         }
@@ -173,7 +208,7 @@ public class FbLogin extends FragmentActivity {
 
         @Override
         protected User doInBackground(Void... params) {
-            String url = "http://10.74.229.154:8389/neo4j/v1/users/";
+            String url = "http://117.96.1.204:8389/neo4j/v1/users/";
             System.out.print("in creating user!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             // create the user
             User u1 = new User(fbUserName,fbUserEmail,fbUserId);
@@ -190,6 +225,7 @@ public class FbLogin extends FragmentActivity {
             // save user details in global config
             UserInfo u2 = UserInfo.getInstance();
             u2.copy(u);
+            setNewUser(1);
             Intent i = new Intent(FbLogin.this, GoodReadsLogin.class);
             startActivity(i);
         }

@@ -2,24 +2,42 @@ package com.example.booksharing1;
 
 import android.location.Address;
 
+import com.example.booksharing1.JSON.User;
+
+import java.util.List;
 import java.util.Set;
 
 
 public class UserInfo {
     private static final UserInfo uInfo = new UserInfo();
-    private String id;
-    private String fbId;
-    private String name;
-    private String email;
-    private String profileImageUrl;
-    private long lastModifiedDate;
-    private Set<Address> addresses;
-    private String phone;
+    private List<Address> addresses;
+
+
     private long createdDate;
-    private String goodreadsAuthStatus;
-    private String goodreadsId;
+
+    private String email;
+    private Set<String> favorites;
+
+    private String fbId;
     private String goodreadsAccessToken;
     private String goodreadsAccessTokenSecret;
+    private String goodreadsAuthStatus;
+    private String goodreadsId;
+
+    private String id;
+
+    private long lastModifiedDate;
+    private String name;
+
+    private Long nodeId;
+    private String phone;
+
+    private String profileImageUrl;
+
+    private String workDesignation;
+
+    private String workLocation;
+
 
     // Private constructor prevents instantiation from other classes
     private UserInfo() {}
@@ -107,11 +125,11 @@ public class UserInfo {
         this.createdDate = createdDate;
     }
 
-    public Set<Address> getAddresses() {
+    public List<Address> getAddresses() {
         return addresses;
     }
 
-    public void setAddresses(Set<Address> addresses) {
+    public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
     }
 

@@ -1,8 +1,11 @@
 package com.example.booksharing1;
+import com.example.booksharing1.JSON.Fields;
+import com.example.booksharing1.JSON.Field;
 
 import com.example.booksharing1.GoodReads.OAuthRequestTokenTask;
 import com.example.booksharing1.GoodReads.ResponseParser;
 import com.example.booksharing1.GoodReads.User;
+
 
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
@@ -21,6 +24,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 public class GoodReadsLogin extends FragmentActivity
 {
@@ -29,6 +45,10 @@ public class GoodReadsLogin extends FragmentActivity
     private final static String _CallbackUrl = "oauth:///";
     private final static CommonsHttpOAuthConsumer _Consumer = new CommonsHttpOAuthConsumer(_ConsumerKey, _ConsumerSecret);
     private Context c;
+    private String token;
+    private String secret;
+    private String userid;
+
     private final static OAuthProvider _Provider = new DefaultOAuthProvider(
             "http://www.goodreads.com/oauth/request_token",
             "http://www.goodreads.com/oauth/access_token",
@@ -91,6 +111,7 @@ public class GoodReadsLogin extends FragmentActivity
 
         String token = prefs.getString("userId", "");
         Toast.makeText(this, "The request success .. yay."+token, Toast.LENGTH_LONG).show();
+
     }
 
     /** Called when the activity is resumed. */
@@ -131,32 +152,6 @@ public class GoodReadsLogin extends FragmentActivity
             } finally {
 
             };
-            /*
-            catch (OAuthMessageSignerException e1)
-            {
-                Toast.makeText(this, "Message signer exception:\n" + e1.getMessage(), Toast.LENGTH_LONG).show();
-                finish();
-                return;
-            }
-            catch (OAuthNotAuthorizedException e1)
-            {
-                Toast.makeText(this, "Not Authorized Exception:\n" + e1.getMessage(), Toast.LENGTH_LONG).show();
-                finish();
-                return;
-            }
-            catch (OAuthExpectationFailedException e1)
-            {
-                Toast.makeText(this, "Expectation Failed Exception:\n" + e1.getMessage(), Toast.LENGTH_LONG).show();
-                finish();
-                return;
-            }
-            catch (OAuthCommunicationException e1)
-            {
-                Toast.makeText(this, "Communication Exception:\n" + e1.getMessage(), Toast.LENGTH_LONG).show();
-                finish();
-                return;
-            }
-            */
 
         }
 
@@ -176,10 +171,73 @@ public class GoodReadsLogin extends FragmentActivity
                 tokens.putExtra("com.onesadjam.yagrac.tokenSecret", tokenSecret);
                 tokens.putExtra("com.onesadjam.yagrac.userId", userId);
                 setResult(RESULT_OK, tokens);
+                new HttpRequestTaskPut().execute();
              //   finish();
             }
         }
     }
+
+    private class HttpRequestTaskPut extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            String url = "http://10.74.229.154:8389/neo4j/v1/users/{id}/fields";
+
+            // get the userId for the user from singleton class
+            String id = UserInfo.getInstance().getId();
+           // url+=id;
+           // url+="/fields";
+
+            System.out.print("in updating user goodreads details!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+            SharedPreferences sharedPreferences = getSharedPreferences("com.onesadjam.yagrac", MODE_PRIVATE);
+            String token = sharedPreferences.getString("token", "");
+            String tokenSecret = sharedPreferences.getString("tokenSecret", "");
+            String userId = sharedPreferences.getString("userId", "");
+
+            Map<String, String> putParams = new HashMap<String, String>();
+            putParams.put("id", id);
+
+            com.example.booksharing1.JSON.User updatedUser = new com.example.booksharing1.JSON.User(id);
+            com.example.booksharing1.JSON.User euser = updatedUser;
+
+            updatedUser.setGoodreadsAccessToken(token);
+            updatedUser.setGoodreadsAccessTokenSecret(tokenSecret);
+            updatedUser.setGoodreadsAuthStatus("yes");
+            updatedUser.setGoodreadsId(userId);
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
+           // acceptableMediaTypes.add(MediaType.APPLICATION_XML);
+            acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(acceptableMediaTypes);
+
+            List<Field> fields = new ArrayList<Field>();
+            fields.add(new Field("goodreadsAccessToken",token));
+            fields.add(new Field("goodreadsAccessTokenSecret",tokenSecret));
+            fields.add(new Field("goodreadsAuthStatus","yes"));
+            fields.add(new Field("goodreadsId",userId));
+
+            Fields f = new Fields(fields);
+
+            HttpEntity<Fields> entity = new HttpEntity<Fields>(f, headers);
+            try {
+                ResponseEntity<String> result = restTemplate.exchange(url, HttpMethod.PUT, entity, String.class, id);
+            } catch (Exception e) {
+                System.out.print("in exception of PUT request..."+e.getMessage());
+            }
+
+            return null;
+        }
+
+
+
+    }
+
+
 
     public class RetrieveAccessTokenTask extends AsyncTask<Uri, Void, Void> {
 
@@ -237,7 +295,16 @@ public class GoodReadsLogin extends FragmentActivity
                    // Toast.makeText(this, "Error getting authorized user:\n" + e.getMessage(), Toast.LENGTH_LONG).show();
                     Log.d("error","Exception in getting the user"+e.getMessage());
                 }
-                context.startActivity(new Intent(context, MyBooks.class));
+                // save all the data we got in the user details
+                new HttpRequestTaskPut().execute();
+
+                // show location only for new user. else goto mybooks class
+                int isNewUser = FbLogin.getNewUser();
+                if(isNewUser == 1) {
+                    context.startActivity(new Intent(context, Location.class));
+                } else {
+                    context.startActivity(new Intent(context, FindOwnedBooks.class));
+                }
 
                 Log.i("abc", "OAuth - Access Token Retrieved");
                 Log.i("abc", "access token: "+token); // prints access token
@@ -251,3 +318,4 @@ public class GoodReadsLogin extends FragmentActivity
     }
 
 }
+

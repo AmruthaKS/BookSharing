@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import com.example.booksharing1.MyLocation.LocationResult;
+import com.example.booksharing1.LocationHelper.LocationResult;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -92,7 +92,7 @@ public class Profile extends NavigationDrawer
             	    	
             	    }
             	};
-            	MyLocation myLocation = new MyLocation();
+            	LocationHelper myLocation = new LocationHelper();
             	myLocation.getLocation(getApplicationContext(), locationResult);
             	Toast.makeText(getApplicationContext(), "City : "+city,
             			Toast.LENGTH_LONG).show(); 

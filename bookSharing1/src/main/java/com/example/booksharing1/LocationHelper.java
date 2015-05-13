@@ -8,7 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-public class MyLocation {
+public class LocationHelper {
     Timer timer1;
     LocationManager lm;
     LocationResult locationResult;
@@ -17,7 +17,7 @@ public class MyLocation {
 
     public boolean getLocation(Context context, LocationResult result)
     {
-        //I use LocationResult callback class to pass location value from MyLocation to user code.
+        //I use LocationResult callback class to pass location value from LocationHelper to user code.
         locationResult=result;
         if(lm==null)
             lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
