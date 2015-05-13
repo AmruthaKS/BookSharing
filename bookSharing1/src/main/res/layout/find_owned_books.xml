@@ -19,7 +19,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Books"
+            android:text="Next"
             android:layout_gravity="center"
             android:gravity="center_vertical"
             android:layout_marginLeft="90px"
@@ -29,7 +29,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Skip Now"
-
             android:id="@+id/skipOwnedBooks" />
     </TableRow>
 </TableLayout>

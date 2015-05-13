@@ -32,6 +32,8 @@ public class Book implements Serializable {
         private String dueDate;
         private String contractPeriodInDays;
     private String bookType;  //Owned, borrowed, wishlist
+    public Book(String Bid ) { id = Bid ;}
+    public Book() { }
 
     public Map<String, Object> getAdditionalProperties() {
         if(additionalProperties == null)

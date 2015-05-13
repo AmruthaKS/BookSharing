@@ -1,6 +1,7 @@
 package com.example.booksharing1;
 import com.example.booksharing1.JSON.BooksPage;
 import com.example.booksharing1.JSON.Book;
+import com.example.booksharing1.JSON.User;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.app.ProgressDialog;
+import android.widget.Toast;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -108,6 +110,7 @@ public class FindOwnedBooks extends Activity {
     private static class ReadBooks {
         private String name = "" ;
         private boolean checked = false ;
+        private String bookId = "";
         public ReadBooks() {}
         public ReadBooks(String name) {
             this.name = name ;
@@ -116,6 +119,11 @@ public class FindOwnedBooks extends Activity {
             this.name = name ;
             this.checked = checked ;
         }
+        public ReadBooks(String name, String bookId) {
+            this.name = name ;
+            this.bookId = bookId ;
+        }
+
         public String getName() {
             return name;
         }
@@ -127,12 +135,20 @@ public class FindOwnedBooks extends Activity {
         }
         public void setChecked(boolean checked) {
             this.checked = checked;
+            // call async task
+            if (checked ) {
+                // true -> so call async task
+                new HttpRequestPostOwnedBooks().execute(bookId);
+
+            }
         }
         public String toString() {
             return name ;
         }
         public void toggleChecked() {
+
             checked = !checked ;
+            System.out.print("in toggle checked !!!!!!!!!.. the value is "+checked);
         }
     }
 
@@ -149,6 +165,7 @@ public class FindOwnedBooks extends Activity {
             return checkBox;
         }
         public void setCheckBox(CheckBox checkBox) {
+
             this.checkBox = checkBox;
         }
         public TextView getTextView() {
@@ -196,7 +213,8 @@ public class FindOwnedBooks extends Activity {
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v ;
                         ReadBooks readBooks = (ReadBooks) cb.getTag();
-                        readBooks.setChecked( cb.isChecked() );
+                        readBooks.setChecked(cb.isChecked());
+
                     }
                 });
             }
@@ -257,7 +275,7 @@ public class FindOwnedBooks extends Activity {
             // Got the list of books.
             readBooks = new ReadBooks[books.size()];
             for ( int i=0 ; i < books.size() ; i++ ) {
-                readBooks[i] = new ReadBooks(books.get(i).getName());
+                readBooks[i] = new ReadBooks(books.get(i).getName(),books.get(i).getId());
             }
 
             ArrayList<ReadBooks> readBooksList = new ArrayList<ReadBooks>();
@@ -265,6 +283,39 @@ public class FindOwnedBooks extends Activity {
 
             listAdapter = new ReadBooksArrayAdapter(ctx, readBooksList);
             mainListView.setAdapter( listAdapter );
+
+        }
+    }
+
+
+    private static class HttpRequestPostOwnedBooks extends AsyncTask<String, Void, Book> {
+
+        @Override
+        protected Book doInBackground(String... params) {
+            String url = "http://54.251.185.219:8080/neo4j/v1/users/651e34d7-08d8-46e0-af2d-37a6990986c4";
+           // url += UserInfo.getInstance().getId();
+            url += "/books/{id}/own";
+
+            System.out.print("url is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+url);
+            // get the books details
+
+            Book ownedBook = new Book(params[0]);
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            Book result = new Book();
+            try {
+                 result = restTemplate.postForObject(url, ownedBook, Book.class, params[0]);
+            } catch(Exception e ){
+                    System.out.print("in exception.. exception is "+e.getMessage());
+            }
+            return result;
+        }
+
+
+        @Override
+        protected void onPostExecute(Book book) {
+            // find the values stored in the book
+
 
         }
     }
