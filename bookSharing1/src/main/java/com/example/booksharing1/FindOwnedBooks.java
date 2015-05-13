@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.app.ProgressDialog;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -30,6 +31,7 @@ public class FindOwnedBooks extends Activity {
     private ReadBooks[] readBooks;
     private ArrayAdapter<ReadBooks> listAdapter;
     private Context ctx;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,13 @@ public class FindOwnedBooks extends Activity {
                 viewHolder.getCheckBox().setChecked( readBooks.isChecked() );
             }
         });
+
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("Fetching Books...");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.show();
+
 
 
 /*
@@ -243,6 +252,8 @@ public class FindOwnedBooks extends Activity {
 
         @Override
         protected void onPostExecute(List<Book> books) {
+            // To dismiss the dialog
+            progress.dismiss();
             // Got the list of books.
             readBooks = new ReadBooks[books.size()];
             for ( int i=0 ; i < books.size() ; i++ ) {
