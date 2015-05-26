@@ -1,27 +1,43 @@
 package com.example.booksharing1;
 
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
-import com.example.booksharing1.LocationHelper.LocationResult;
-
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.booksharing1.LocationHelper.LocationResult;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import static android.graphics.BitmapFactory.decodeStream;
 
 
-public class Profile extends NavigationDrawer 
+public class Profile extends NavigationDrawer
  {
 	String city = null;
 	String streetname = null;
@@ -33,7 +49,49 @@ public class Profile extends NavigationDrawer
 		mDrawerList.setItemChecked(pos, true);
 		setTitle(mPlanetTitles[pos]);
 		getLayoutInflater().inflate(R.layout.profile, frameLayout);
-		
+
+        TextView name = (TextView)findViewById(R.id.name);
+        TextView email = (TextView)findViewById(R.id.email);
+        TextView address = (TextView)findViewById(R.id.address);
+        final ImageView pic = (ImageView)findViewById(R.id.profilePic);
+
+        UserInfo usr = UserInfo.getInstance();
+
+        name.setText(usr.getName());
+        email.setText("\nEmail : " +usr.getEmail());
+        String Address = "\nAddress : ";
+        if ( usr.getAddresses().isEmpty()) {
+            // No addresses are found
+            address.setText("\nAddress : No address listed \n");
+        } else {
+             for ( int i=0 ; i < usr.getAddresses().size() ; i++ ) {
+                 Address.concat(usr.getAddresses().get(i).toString());
+                 Address.concat("\n");
+             }
+             address.setText(Address);
+        }
+        final String img_url= usr.getProfileImageUrl();
+
+        System.out.print("the url is ... "+img_url);
+        final URL[] url = new URL[1];
+
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                try {
+                    //Your code goes here
+                    url[0] = new URL(img_url);
+                    Bitmap bmp;
+                    bmp = decodeStream(url[0].openConnection().getInputStream());
+                    pic.setImageBitmap(bmp);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
 		
 		ImageButton ib = (ImageButton)findViewById(R.id.imageButton1);
         ib.setOnClickListener(new OnClickListener() {
@@ -118,6 +176,22 @@ public class Profile extends NavigationDrawer
             
             	
         });
+
+
+        Button sync = (Button)findViewById(R.id.force_sync);
+        sync.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                // make a call to sync to good reads
+                new HttpRequestTaskPost().execute();
+
+            }
+
+
+
+        });
         
        
 	
@@ -154,5 +228,50 @@ public class Profile extends NavigationDrawer
 	    builder.setMessage(message);
 	    builder.setPositiveButton(R.string.ok_button, null);
 	    builder.show();
-	  }
+	}
+
+
+     private class HttpRequestTaskPost extends AsyncTask<Void, Void, ResponseEntity<String>> {
+
+         @Override
+         protected ResponseEntity<String> doInBackground(Void... params) {
+             String url = "http://106.206.213.59:8389/neo4j/v1/users/";
+             url += UserInfo.getInstance().getId();
+             url += "/goodreads/synch";
+
+             List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
+             acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
+
+             HttpHeaders headers = new HttpHeaders();
+             headers.setAccept(acceptableMediaTypes);
+
+
+             HttpEntity<String> entity = new HttpEntity<String>("new", headers);
+
+
+             RestTemplate restTemplate = new RestTemplate();
+             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+             ResponseEntity<String> result = null;
+             try {
+                 result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+             } catch (Exception e) {
+                 System.out.print("Exception occurred while doing force sync.."+e.getMessage());
+             }
+             return result;
+         }
+
+
+         @Override
+         protected void onPostExecute(ResponseEntity<String> result ) {
+             // can start an intent to home page
+             if ( result.getStatusCode().equals("200") ) {
+                 System.out.println("Sync completed !!! yay ");
+             }
+
+             // to do : if fails update UI with the corresponding response string
+
+         }
+     }
+
+
 }

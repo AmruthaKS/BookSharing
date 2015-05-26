@@ -4,11 +4,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+     <ListView
+        android:id="@+id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="favourites"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        android:text="Add favourites ? "
+        android:layout_gravity="center"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Yes"
+        android:layout_gravity="center"
+        android:id="@+id/AddFavButton" />
 
 </LinearLayout>

@@ -73,6 +73,43 @@
         android:text="Availability Status"
         android:id="@+id/staticText" />
 
+
+
+
+        <TableLayout
+            android:background="@drawable/my_border"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30sp"
+            android:paddingLeft="100sp"
+            >
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:paddingTop="10sp"
+                    android:text="Lend the book to your friends?"
+                    android:layout_span="2"
+                    android:id="@+id/textView" />
+            </TableRow>
+
+            <TableRow>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Yes"
+                    android:id="@+id/yes" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No"
+                    android:id="@+id/no" />
+
+            </TableRow>
+        </TableLayout>
+
+
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,3 +117,4 @@
 
 
 </LinearLayout>
+

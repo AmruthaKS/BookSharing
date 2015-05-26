@@ -1,9 +1,6 @@
 package com.example.booksharing1;
-import com.example.booksharing1.JSON.BooksPage;
-import com.example.booksharing1.JSON.Book;
-import com.example.booksharing1.JSON.User;
-
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,8 +14,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.app.ProgressDialog;
-import android.widget.Toast;
+
+import com.example.booksharing1.JSON.Book;
+import com.example.booksharing1.JSON.BooksPage;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -56,7 +54,7 @@ public class FindOwnedBooks extends Activity {
             @Override
             public void onClick(View v) {
                 // goto mybooks
-                Intent intent = new Intent(ctx, MyBooks.class);
+                Intent intent = new Intent(ctx, AddFavourites.class);
                 ctx.startActivity(intent);
 
             }
@@ -67,11 +65,12 @@ public class FindOwnedBooks extends Activity {
 
             @Override
             public void onClick(View v) {
-                // call api to add owned books and goto my books
+                // goto mybooks
+                Intent intent = new Intent(ctx, AddFavourites.class);
+                ctx.startActivity(intent);
 
             }
         });
-
 
 
         mainListView = (ListView) findViewById( R.id.mainListView );

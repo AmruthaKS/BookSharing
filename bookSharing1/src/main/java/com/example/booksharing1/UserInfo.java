@@ -4,6 +4,7 @@ import android.location.Address;
 
 import com.example.booksharing1.JSON.User;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -59,6 +60,22 @@ public class UserInfo {
         goodreadsId = u.getGoodreadsId();
         goodreadsAccessToken = u.getGoodreadsAccessToken();
         goodreadsAccessTokenSecret = u.getGoodreadsAccessTokenSecret();
+        favorites = u.getFavorites();
+    }
+    public Set<String> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(Set<String> favourites) {
+        this.favorites = favourites;
+    }
+
+    public void addFavorites(Set<String> favourites) {
+        Iterator<String> iterator = favourites.iterator();
+        while(iterator.hasNext()) {
+            String setElement = iterator.next();
+            this.favorites.add(setElement) ;
+        }
     }
 
     public String getProfileImageUrl() {

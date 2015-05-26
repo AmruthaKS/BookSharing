@@ -1,14 +1,4 @@
 package com.example.booksharing1;
-import com.example.booksharing1.JSON.User;
-import com.facebook.Request;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphUser;
-import com.facebook.widget.LoginButton;
-import com.facebook.widget.LoginButton.UserInfoChangedCallback;
-import java.util.Arrays;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,8 +7,19 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.booksharing1.JSON.User;
+import com.facebook.Request;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
+import com.facebook.widget.LoginButton.UserInfoChangedCallback;
+
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
 
 public class FbLogin extends FragmentActivity {
 	private LoginButton loginBtn;
@@ -149,7 +150,7 @@ public class FbLogin extends FragmentActivity {
         @Override
         protected User doInBackground(Void... fbId) {
 
-            String url = "http://117.96.1.204:8389/neo4j/v1/users/fbId/"+fbUserId;
+            String url = "http://27.57.16.139:8389/neo4j/v1/users/fbId/"+fbUserId;
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
             System.out.println("in doing get for the object...!!!!!!!"+fbUserId);
@@ -174,6 +175,8 @@ public class FbLogin extends FragmentActivity {
             // save user details in global config
             else {
                 UserInfo u1 = UserInfo.getInstance();
+                String imageURL = "https://graph.facebook.com/"+u.getFbId()+"/picture?type=large";
+                u.setProfileImageUrl(imageURL);
                 u1.copy(u);
                 setNewUser(0);
                 String auth_status = u.getGoodreadsAuthStatus();
@@ -208,7 +211,7 @@ public class FbLogin extends FragmentActivity {
 
         @Override
         protected User doInBackground(Void... params) {
-            String url = "http://117.96.1.204:8389/neo4j/v1/users/";
+            String url = "http://27.57.16.139:8389/neo4j/v1/users/";
             System.out.print("in creating user!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             // create the user
             User u1 = new User(fbUserName,fbUserEmail,fbUserId);
@@ -224,6 +227,8 @@ public class FbLogin extends FragmentActivity {
         protected void onPostExecute(User u) {
             // save user details in global config
             UserInfo u2 = UserInfo.getInstance();
+            String imageURL = "https://graph.facebook.com/"+u.getFbId()+"/picture?type=large";
+            u.setProfileImageUrl(imageURL);
             u2.copy(u);
             setNewUser(1);
             Intent i = new Intent(FbLogin.this, GoodReadsLogin.class);

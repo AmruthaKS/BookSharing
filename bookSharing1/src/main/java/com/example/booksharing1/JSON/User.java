@@ -34,8 +34,45 @@ public class User implements Serializable {
     private String profileImageUrl;
 
     private String workDesignation;
+    private String googleId;
 
     private String workLocation;
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    private String gender;
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
+    }
+
+
+    public String getGoodReadsSynchStatus() {
+        return goodReadsSynchStatus;
+    }
+
+    public void setGoodReadsSynchStatus(String goodReadsSynchStatus) {
+        this.goodReadsSynchStatus = goodReadsSynchStatus;
+    }
+
+    public long getLastGoodreadsSychDate() {
+        return lastGoodreadsSychDate;
+    }
+
+    public void setLastGoodreadsSychDate(long lastGoodreadsSychDate) {
+        this.lastGoodreadsSychDate = lastGoodreadsSychDate;
+    }
+
+    private String goodReadsSynchStatus;
+    private long lastGoodreadsSychDate;
 
     public User() {
 

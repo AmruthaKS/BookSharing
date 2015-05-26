@@ -1,17 +1,4 @@
 package com.example.booksharing1;
-import com.example.booksharing1.JSON.Fields;
-import com.example.booksharing1.JSON.Field;
-
-import com.example.booksharing1.GoodReads.OAuthRequestTokenTask;
-import com.example.booksharing1.GoodReads.ResponseParser;
-import com.example.booksharing1.GoodReads.User;
-
-
-import oauth.signpost.OAuth;
-import oauth.signpost.OAuthConsumer;
-import oauth.signpost.OAuthProvider;
-import oauth.signpost.basic.DefaultOAuthProvider;
-import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +10,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.booksharing1.GoodReads.OAuthRequestTokenTask;
+import com.example.booksharing1.GoodReads.ResponseParser;
+import com.example.booksharing1.GoodReads.User;
+import com.example.booksharing1.JSON.Field;
+import com.example.booksharing1.JSON.Fields;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +29,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import oauth.signpost.OAuth;
+import oauth.signpost.OAuthConsumer;
+import oauth.signpost.OAuthProvider;
+import oauth.signpost.basic.DefaultOAuthProvider;
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 
 
 public class GoodReadsLogin extends FragmentActivity
