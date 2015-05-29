@@ -9,35 +9,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.booksharing1.JSON.Book;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
+import com.example.booksharing1.JSON.OwnedBook;
 
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-class BooksResponse {
-    @JsonProperty("ownedBooks")
-    List<Book> book;
-
-    public List<Book> getBooks () {
-        return book;
-    }
-
-
-    public void setBooks (List<Book> books) {
-        book = books;
-    }
-
-}
-
+//@JsonIgnoreProperties(ignoreUnknown = true)
 
 
 public class Books extends NavigationDrawer {
     ListView list;
+    ProgressBarHandler progressBarHandler;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		//setContentView(R.layout.activity_main1);
@@ -45,7 +26,8 @@ public class Books extends NavigationDrawer {
 		mDrawerList.setItemChecked(pos, true);
 		setTitle(mPlanetTitles[pos]);
 		getLayoutInflater().inflate(R.layout.books, frameLayout);
-		
+		progressBarHandler = new ProgressBarHandler(this);
+        progressBarHandler.show();
 		new HttpRequestTask().execute();
 
 	}
@@ -57,40 +39,21 @@ public class Books extends NavigationDrawer {
 		return true;
 	}
 	
-	private class HttpRequestTask extends AsyncTask<Void, Void, List<Book>> {
+	private class HttpRequestTask extends AsyncTask<Void, Void, List<OwnedBook>> {
 		
 		
 		@Override
-		protected List<Book> doInBackground(Void... params) {
-			// get an instance of the http client conn object
-			// HttpClient client = HttpClientFactory.getThreadSafeClient();
-			
-		    //for one book
-			final String url1 = "http://54.251.185.219:8080/neo4j/v1/books/0159569d-883d-4bff-a3b8-4ad30cc0582d";
+		protected List<OwnedBook> doInBackground(Void... params) {
 
-            //for multiple books
-            final String url = "http://54.251.185.219:8080/neo4j/v1/users/651e34d7-08d8-46e0-af2d-37a6990986c4/books?filter=owned";
-
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            List<Book> book = restTemplate.getForObject(url, BooksResponse.class).getBooks();
+            String url = "users/"+UserInfo.getInstance().getId()+"/books?filter=owned";
+            List<OwnedBook> book = new HttpRestClient().getOwnedBooks(url);
             return book;
 			
 		}
 		
 		@Override
-        protected void onPostExecute(final List<Book> book) {
-
-
-/*
-            TextView tv1 = (TextView) findViewById(R.id.textView1);
-            TextView tv2 = (TextView) findViewById(R.id.textView2);
-            TextView tv3 = (TextView) findViewById(R.id.textView3);
-            tv1.setText(book.get(0).getAuthorName());
-            tv2.setText(book.get(0).getName());
-            tv3.setText(book.get(0).getIsbn());
-*/
-
+        protected void onPostExecute(final List<OwnedBook> book) {
+            progressBarHandler.hide();
             String[] myStringArray = new String[book.size()];
             CustomBookList adapter = new CustomBookList(Books.this, book,myStringArray);
             list=(ListView)findViewById(R.id.book_list);

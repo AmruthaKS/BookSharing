@@ -71,9 +71,7 @@ public class AddFavourites extends Activity implements  OnClickListener {
             if (checked.valueAt(i))
                 selectedItems.add(adapter.getItem(position));
         }
-        Set setA = new HashSet();
-
-
+        Set<String> setA = new HashSet<String>();
         for (int i = 0; i < selectedItems.size(); i++) {
             setA.add(selectedItems.get(i));
         }
@@ -86,7 +84,7 @@ public class AddFavourites extends Activity implements  OnClickListener {
 
         @Override
         protected ResponseEntity<String> doInBackground(Set<String>... params) {
-            String url = "http://27.57.16.139:8389/neo4j/v1/users/";
+            String url = "http://106.216.168.192:8389/neo4j/v1/users/";
             url += UserInfo.getInstance().getId();
             url += "/favourites";
             List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();

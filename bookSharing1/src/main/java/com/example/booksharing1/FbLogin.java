@@ -148,20 +148,9 @@ public class FbLogin extends FragmentActivity {
             this.context = c;
         }
         @Override
-        protected User doInBackground(Void... fbId) {
-
-            String url = "http://27.57.16.139:8389/neo4j/v1/users/fbId/"+fbUserId;
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            System.out.println("in doing get for the object...!!!!!!!"+fbUserId);
-            User user = new User();
-            try {
-
-               user = restTemplate.getForObject(url, User.class);
-               System.out.println("user details are"+user.getEmail());
-            } catch (Exception e){
-                System.out.print("exception!!!!!!!!!!"+e.getMessage());
-            }
+        protected User doInBackground(Void... params) {
+            System.out.println("in doing get for the object...!!!!!!!" + fbUserId);
+            User user = new HttpRestClient().getUser("users/fbId/"+fbUserId);
             return user;
         }
 
@@ -211,14 +200,13 @@ public class FbLogin extends FragmentActivity {
 
         @Override
         protected User doInBackground(Void... params) {
-            String url = "http://27.57.16.139:8389/neo4j/v1/users/";
+            String url = "http://106.216.168.192:8389/neo4j/v1/users/";
             System.out.print("in creating user!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             // create the user
             User u1 = new User(fbUserName,fbUserEmail,fbUserId);
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
             User result = restTemplate.postForObject(url,u1,User.class);
-
             return result;
         }
 

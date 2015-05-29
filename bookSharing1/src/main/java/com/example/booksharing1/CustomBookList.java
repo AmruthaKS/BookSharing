@@ -1,11 +1,7 @@
 package com.example.booksharing1;
-import  com.example.booksharing1.JSON.Book;
-
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.IOError;
-import java.io.IOException;
+import com.example.booksharing1.JSON.OwnedBook;
+
 import java.net.URL;
 import java.util.List;
 
@@ -23,9 +19,9 @@ import static android.graphics.BitmapFactory.decodeStream;
 public class CustomBookList extends ArrayAdapter<String>{
 private final Activity context;
 private final String bookarray[];
-List<Book> books;
+List<OwnedBook> books;
 
-public CustomBookList(Activity context, List<Book> book ,String bookarray[]) {
+public CustomBookList(Activity context, List<OwnedBook> book ,String bookarray[]) {
 	super(context, R.layout.mybook_list_single, bookarray);
 	this.context = context;
     this.bookarray = bookarray;
@@ -61,7 +57,7 @@ public View getView(int position, View view, ViewGroup parent) {
                 url[0] = new URL(img_url);
                 Bitmap bmp;
                 bmp = decodeStream(url[0].openConnection().getInputStream());
-                imageView.setImageBitmap(bmp);
+                setImage(imageView,bmp);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -72,5 +68,15 @@ public View getView(int position, View view, ViewGroup parent) {
     thread.start();
 
 	return rowView;
-}
+    }
+
+    public Void setImage(final ImageView v ,final Bitmap b) {
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                v.setImageBitmap(b);
+            }
+        });
+        return null;
+    }
 }

@@ -25,15 +25,56 @@ public class Book implements Serializable {
         private String publisher;
         private Integer numberOfPages;
 
-        private String createdDate;
         private String status;
-        private String lastModifiedDate;
+
         private String borrowerId;
         private String dueDate;
-        private String contractPeriodInDays;
+
     private String bookType;  //Owned, borrowed, wishlist
     public Book(String Bid ) { id = Bid ;}
     public Book() { }
+
+    public Book(String name, String isbn) {
+        this.name = name;
+        this.isbn = isbn;
+    }
+
+    public Book(String id, String name, String isbn) {
+        this.id = id;
+        this.name = name;
+        this.isbn = isbn;
+    }
+
+    public Book(Integer goodreadsId, String authorName, String goodreadsAuthorId, String name, String isbn, String isbn13, int publishedYear, String description, String publisher, Integer numberOfPages, String imageUrl) {
+        this.goodreadsId = goodreadsId;
+        this.authorName = authorName;
+        this.goodreadsAuthorId = goodreadsAuthorId;
+        this.name = name;
+        this.isbn = isbn;
+        this.isbn13 = isbn13;
+        this.publishedYear = publishedYear;
+        this.description = description;
+        this.publisher = publisher;
+        this.numberOfPages = numberOfPages;
+        this.imageUrl = imageUrl;
+    }
+
+    public Book(Long nodeId, String id, Integer goodreadsId, String authorName, String goodreadsAuthorId, String name, String isbn, String isbn13, int publishedYear, String description, String publisher, Integer numberOfPages, String imageUrl) {
+        this.nodeId = nodeId;
+        this.id = id;
+        this.goodreadsId = goodreadsId;
+        this.authorName = authorName;
+        this.goodreadsAuthorId = goodreadsAuthorId;
+        this.name = name;
+        this.isbn = isbn;
+        this.isbn13 = isbn13;
+        this.publishedYear = publishedYear;
+        this.description = description;
+        this.publisher = publisher;
+        this.numberOfPages = numberOfPages;
+        this.imageUrl = imageUrl;
+    }
+
 
     public Map<String, Object> getAdditionalProperties() {
         if(additionalProperties == null)
@@ -163,32 +204,17 @@ public class Book implements Serializable {
         this.isbn13 = isbn13;
     }
 
-        public String getCreatedDate() {
-            return createdDate;
-        }
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
         public String getStatus() { return  status; }
     public void setStatus(String Status) {
         this.status = Status;
     }
-        public String getLastModifiedDate() { return lastModifiedDate; }
-    public void setLastModifiedDate(String lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
+
+
         public String getBorrowerId() { return borrowerId; }
     public void setBorrowerId(String borrowerId) {
         this.borrowerId = borrowerId;
     }
         public String getDueDate() { return  dueDate; }
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
-    }
-        public String getContractPeriodInDays() { return  contractPeriodInDays; }
-    public void setContractPeriodInDays(String contractPeriodInDays) {
-        this.contractPeriodInDays = contractPeriodInDays;
-    }
 
-	 	
+
 }

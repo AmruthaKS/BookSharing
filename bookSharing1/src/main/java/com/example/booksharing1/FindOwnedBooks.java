@@ -1,6 +1,6 @@
 package com.example.booksharing1;
+
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,10 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.booksharing1.JSON.Book;
-import com.example.booksharing1.JSON.BooksPage;
-
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +27,7 @@ public class FindOwnedBooks extends Activity {
     private ReadBooks[] readBooks;
     private ArrayAdapter<ReadBooks> listAdapter;
     private Context ctx;
-    private ProgressDialog progress;
+    private ProgressBarHandler mProgressBarHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,22 +83,18 @@ public class FindOwnedBooks extends Activity {
             }
         });
 
-        progress = new ProgressDialog(this);
+
+        mProgressBarHandler = new ProgressBarHandler(this);
+        mProgressBarHandler.show();
+
+
+       // bar.setVisibility(View.VISIBLE);
+      //  progress.setProgressDrawable();
+        /*
         progress.setTitle("Loading");
         progress.setMessage("Fetching Books...");
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.show();
-
-
-
-/*
-        ArrayList<ReadBooks> readBooksList = new ArrayList<ReadBooks>();
-        readBooksList.addAll( Arrays.asList(readBooks) );
-
-        // Set our custom array adapter as the ListView's adapter.
-        listAdapter = new ReadBooksArrayAdapter(this, readBooksList);
-        mainListView.setAdapter( listAdapter );
-*/
+        progress.show(); */
 
     }
 
@@ -247,30 +239,21 @@ public class FindOwnedBooks extends Activity {
 
         @Override
         protected List<Book> doInBackground(Void... params) {
-            String url = "http://54.251.185.219:8080/neo4j/v1/users/651e34d7-08d8-46e0-af2d-37a6990986c4/books?filter=read";
-          //  url += UserInfo.getInstance().getId();
-         //  url += "/books?filter=read";
-            System.out.print("url is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+url);
-            // get the books details
 
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            BooksPage searchResult = new BooksPage();
-            try {
-
-                searchResult = restTemplate.getForObject(url, BooksPage.class);
-                System.out.print("i m here");
-            } catch (Exception e){
-                System.out.print("exception!!!!!!!!!!"+e.getMessage());
-            }
-            return searchResult.getBooks();
+            String url = "users/"+UserInfo.getInstance().getId()+"/books?filter=read";
+            List<Book> books = new HttpRestClient().getReadBooks(url);
+            return books;
         }
 
 
         @Override
         protected void onPostExecute(List<Book> books) {
             // To dismiss the dialog
-            progress.dismiss();
+            //progress.dismiss();
+            //bar.setVisibility(View.INVISIBLE);
+            mProgressBarHandler.hide();
+
+            System.out.print("after getting the read books !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             // Got the list of books.
             readBooks = new ReadBooks[books.size()];
             for ( int i=0 ; i < books.size() ; i++ ) {
@@ -287,32 +270,19 @@ public class FindOwnedBooks extends Activity {
     }
 
 
-    private static class HttpRequestPostOwnedBooks extends AsyncTask<String, Void, Book> {
+    private static class HttpRequestPostOwnedBooks extends AsyncTask<String, Void, String> {
 
         @Override
-        protected Book doInBackground(String... params) {
-            String url = "http://54.251.185.219:8080/neo4j/v1/users/651e34d7-08d8-46e0-af2d-37a6990986c4";
-           // url += UserInfo.getInstance().getId();
-            url += "/books/{id}/own";
+        protected String doInBackground(String... params) {
 
-            System.out.print("url is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+url);
-            // get the books details
-
-            Book ownedBook = new Book(params[0]);
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            Book result = new Book();
-            try {
-                 result = restTemplate.postForObject(url, ownedBook, Book.class, params[0]);
-            } catch(Exception e ){
-                    System.out.print("in exception.. exception is "+e.getMessage());
-            }
+            String url = "users/"+UserInfo.getInstance().getId()+"/books/{id}/own";
+            String result = new HttpRestClient().addBookToUser(url, new Book(params[0]));
             return result;
         }
 
 
         @Override
-        protected void onPostExecute(Book book) {
+        protected void onPostExecute(String response) {
             // find the values stored in the book
 
 

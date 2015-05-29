@@ -1,24 +1,31 @@
 package com.example.booksharing1;
-import com.example.booksharing1.JSON.Book;
-
-
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Layout;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
 import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
+
+import com.example.booksharing1.JSON.Book;
+import com.example.booksharing1.JSON.BookRelation;
+
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
 import java.net.URL;
+
 import static android.graphics.BitmapFactory.decodeStream;
 
 
@@ -90,7 +97,7 @@ class MyLeadingMarginSpan2 implements LeadingMarginSpan.LeadingMarginSpan2 {
 }
 
 public class SingleBook  extends NavigationDrawer {
-
+    Context c;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //setContentView(R.layout.activity_main1);
@@ -98,7 +105,7 @@ public class SingleBook  extends NavigationDrawer {
         mDrawerList.setItemChecked(pos, true);
         setTitle(mPlanetTitles[pos]);
         getLayoutInflater().inflate(R.layout.single_book, frameLayout);
-
+        c = this;
         TextView title = (TextView) findViewById(R.id.title);
         TextView author = (TextView) findViewById(R.id.author);
         TextView description = (TextView) findViewById(R.id.description);
@@ -107,12 +114,26 @@ public class SingleBook  extends NavigationDrawer {
         TextView numPages = (TextView) findViewById(R.id.numPages);
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
 
+        TableLayout tableLend = (TableLayout)findViewById(R.id.single_book_lend);
+        TableLayout tableOwn = (TableLayout)findViewById(R.id.single_book_own);
+        TableLayout tableWant = (TableLayout)findViewById(R.id.single_book_want);
+        ListView availabilityView = (ListView) findViewById( R.id.AvailabilityListView);
+
+        tableLend.setVisibility(View.INVISIBLE);
+        tableOwn.setVisibility(View.INVISIBLE);
+        tableWant.setVisibility(View.INVISIBLE);
+        availabilityView.setVisibility(View.INVISIBLE);
+
+
         Intent i = getIntent();
         Book book = (Book)i.getSerializableExtra("bookObj");
 
         title.setText(book.getName());
         author.setText("by "+book.getAuthorName());
         description.setText(book.getDescription());
+
+        // Find how the book is related to user.
+        new HttpRequestTaskGetBook(c).execute(book.getId());
 
     //  Display display = getWindowManager().getDefaultDisplay();
     //    FlowTextHelper.tryFlowText(book.getDescription(), imageView, description, display ,10);
@@ -149,5 +170,96 @@ public class SingleBook  extends NavigationDrawer {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    private class HttpRequestTaskGetBook extends AsyncTask<String, Void, BookRelation> {
+        private Context context;
+        public HttpRequestTaskGetBook(Context c) {
+            this.context = c;
+        }
+        @Override
+        protected BookRelation doInBackground(String... id) {
+
+            String url = "http://106.206.193.172:8389/neo4j/v1/"+id+"/users/"+UserInfo.getInstance().getId();
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            System.out.println("in doing get for the object...!!!!!!!"+id);
+            BookRelation book = new BookRelation();
+            try {
+
+                book = restTemplate.getForObject(url, BookRelation.class);
+                System.out.println("user details are"+book.getStatus());
+            } catch (Exception e){
+                System.out.print("exception!!!!!!!!!!"+e.getMessage());
+            }
+            return book;
+        }
+
+        @Override
+        protected void onPostExecute(BookRelation u) {
+
+            System.out.print("in post execute of get book !!!!!!!!!!!!!!!!!!");
+            // now based on the status of the book, hide/unhide the ui elements accordingly
+
+            if ( u.getStatus().equals("own") ) {
+
+            } else if ( u.getStatus().equals("lent") ) {
+
+            } else if ( u.getStatus().equals("wish") ) {
+                // If the user has it in wish list then show the list of users who have that book
+                // call another async task to get that
+                new HttpRequestTaskGetUsers().execute(u.getId().toString());
+            } else {
+
+            }
+
+
+
+        }
+
+    }
+
+
+    private class HttpRequestTaskGetUsers extends AsyncTask<String, Void, BookRelation> {
+
+        @Override
+        protected BookRelation doInBackground(String... id) {
+
+            String url = "http://106.206.193.172:8389/neo4j/v1/"+id+"/users/"+UserInfo.getInstance().getId();
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            System.out.println("in doing get for the object...!!!!!!!"+id);
+            BookRelation book = new BookRelation();
+            try {
+
+                book = restTemplate.getForObject(url, BookRelation.class);
+                System.out.println("user details are"+book.getStatus());
+            } catch (Exception e){
+                System.out.print("exception!!!!!!!!!!"+e.getMessage());
+            }
+            return book;
+        }
+
+        @Override
+        protected void onPostExecute(BookRelation u) {
+
+            System.out.print("in post execute of get book !!!!!!!!!!!!!!!!!!");
+            // now based on the status of the book, hide/unhide the ui elements accordingly
+
+            if ( u.getStatus().equals("owns") ) {
+
+            } else if ( u.getStatus().equals("lent") ) {
+
+            } else if ( u.getStatus().equals("wishlist") ) {
+                // If the user has it in wish list then show the list of users who have that book
+                // call another async task
+
+            } else {
+
+            }
+
+
+        }
+
     }
 }

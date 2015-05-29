@@ -2,63 +2,63 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <ImageView
-        android:layout_width="100sp"
-        android:layout_height="220sp"
-        android:id="@+id/imageView" />
-    <LinearLayout
-        android:id="@+id/layout"
-        android:orientation="vertical"
-        android:paddingLeft="5sp"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30sp"
+
+        <ImageView
+            android:layout_width="100sp"
+            android:layout_height="220sp"
+            android:id="@+id/imageView" />
+        <LinearLayout
+            android:id="@+id/layout"
+            android:orientation="vertical"
             android:paddingLeft="5sp"
-            android:gravity="fill_vertical"
-            android:id="@+id/title" />
-
-        <TextView
+            android:layout_toRightOf="@+id/imageView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="fill_vertical"
-            android:layout_marginTop="5sp"
-            android:paddingLeft="5sp"
-            android:id="@+id/author" />
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30sp"
+                android:paddingLeft="5sp"
+                android:gravity="fill_vertical"
+                android:id="@+id/title" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="fill_vertical"
-            android:layout_marginTop="5sp"
-            android:paddingLeft="5sp"
-            android:id="@+id/year" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="fill_vertical"
+                android:layout_marginTop="5sp"
+                android:paddingLeft="5sp"
+                android:id="@+id/author" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5sp"
-            android:layout_marginTop="5sp"
-            android:id="@+id/publisher" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="fill_vertical"
+                android:layout_marginTop="5sp"
+                android:paddingLeft="5sp"
+                android:id="@+id/year" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5sp"
-            android:paddingLeft="5sp"
-            android:id="@+id/numPages" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5sp"
+                android:layout_marginTop="5sp"
+                android:id="@+id/publisher" />
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5sp"
+                android:paddingLeft="5sp"
+                android:id="@+id/numPages" />
+
+        </LinearLayout>
 
 
-</RelativeLayout>
+    </RelativeLayout>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -74,47 +74,113 @@
         android:id="@+id/staticText" />
 
 
+    <TableLayout
+        android:background="@drawable/my_border"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30sp"
+        android:paddingLeft="100sp"
+        android:id="@+id/single_book_want"
+        >
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:paddingTop="10sp"
+                android:text="Lend the book to your friends?"
+                android:layout_span="2"
+                android:id="@+id/textView" />
+        </TableRow>
+
+        <TableRow>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yes"
+                android:id="@+id/yes" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No"
+                android:id="@+id/no" />
+
+        </TableRow>
+    </TableLayout>
 
 
-        <TableLayout
-            android:background="@drawable/my_border"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="30sp"
-            android:paddingLeft="100sp"
-            >
-            <TableRow>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:paddingTop="10sp"
-                    android:text="Lend the book to your friends?"
-                    android:layout_span="2"
-                    android:id="@+id/textView" />
-            </TableRow>
+    <TableLayout
+        android:background="@drawable/my_border"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30sp"
+        android:paddingLeft="100sp"
+        android:id="@+id/single_book_own"
+        >
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:paddingTop="10sp"
+                android:text="Do you own this book?"
+                android:layout_span="2"
+                android:id="@+id/textView1" />
+        </TableRow>
 
-            <TableRow>
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Yes"
-                    android:id="@+id/yes" />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No"
-                    android:id="@+id/no" />
+        <TableRow>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yes"
+                android:id="@+id/yes1" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No"
+                android:id="@+id/no1" />
 
-            </TableRow>
-        </TableLayout>
+        </TableRow>
+    </TableLayout>
 
+    <TableLayout
+        android:background="@drawable/my_border"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30sp"
+        android:paddingLeft="100sp"
+        android:id="@+id/single_book_lend"
+        >
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:paddingTop="10sp"
+                android:text="Lend the book to your friends?"
+                android:layout_span="2"
+                android:id="@+id/textView2" />
+        </TableRow>
+
+        <TableRow>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yes"
+                android:id="@+id/yes2" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No"
+                android:id="@+id/no2" />
+
+        </TableRow>
+    </TableLayout>
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/AvailabilityListView" />
-
 
 </LinearLayout>
 

@@ -2,6 +2,7 @@ package com.example.booksharing1;
 
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
@@ -50,6 +51,8 @@ public class Profile extends NavigationDrawer
 		setTitle(mPlanetTitles[pos]);
 		getLayoutInflater().inflate(R.layout.profile, frameLayout);
 
+        handleIntent(getIntent());
+
         TextView name = (TextView)findViewById(R.id.name);
         TextView email = (TextView)findViewById(R.id.email);
         TextView address = (TextView)findViewById(R.id.address);
@@ -83,7 +86,8 @@ public class Profile extends NavigationDrawer
                     url[0] = new URL(img_url);
                     Bitmap bmp;
                     bmp = decodeStream(url[0].openConnection().getInputStream());
-                    pic.setImageBitmap(bmp);
+                    setImage(pic,bmp);
+                   // pic.setImageBitmap(bmp);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -92,7 +96,9 @@ public class Profile extends NavigationDrawer
         });
 
         thread.start();
-		
+
+
+
 		ImageButton ib = (ImageButton)findViewById(R.id.imageButton1);
         ib.setOnClickListener(new OnClickListener() {
         
@@ -198,6 +204,15 @@ public class Profile extends NavigationDrawer
 	
 	}
 
+    public Void setImage(final ImageView v ,final Bitmap b) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                v.setImageBitmap(b);
+            }
+        });
+        return null;
+    }
 	 @Override
      public void onActivityResult(int requestCode, int resultCode, Intent intent) {
    	  IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
@@ -229,6 +244,19 @@ public class Profile extends NavigationDrawer
 	    builder.setPositiveButton(R.string.ok_button, null);
 	    builder.show();
 	}
+     @Override
+     protected void onNewIntent(Intent intent) {
+
+         handleIntent(intent);
+     }
+
+     private void handleIntent(Intent intent) {
+
+         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+             String query = intent.getStringExtra(SearchManager.QUERY);
+             //use the query to search your data somehow
+         }
+     }
 
 
      private class HttpRequestTaskPost extends AsyncTask<Void, Void, ResponseEntity<String>> {

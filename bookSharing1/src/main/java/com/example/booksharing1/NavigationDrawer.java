@@ -1,6 +1,8 @@
 package com.example.booksharing1;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 
 public class NavigationDrawer extends Activity {
@@ -135,6 +138,14 @@ public class NavigationDrawer extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.action_websearch).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -154,9 +165,37 @@ public class NavigationDrawer extends Activity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-      
-        return super.onOptionsItemSelected(item);
+
+
+        switch (item.getItemId()) {
+            case R.id.action_websearch:
+                //openSearch();
+                return true;
+            case R.id.action_notifications:
+                openNotifications();
+                return true;
+            case R.id.action_reminders:
+                openReminders();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+
         
+    }
+    public Void openNotifications() {
+        // Call a new intent for the notifications page
+        startActivity(new Intent(this, Notifications.class));
+
+        return null;
+    }
+
+    public Void openReminders() {
+        // Call a new intent for the notifications page
+        startActivity(new Intent(this, Reminders.class));
+
+        return null;
     }
 
     /* The click listener for ListView in the navigation drawer */
